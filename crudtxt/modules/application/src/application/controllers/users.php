@@ -16,7 +16,7 @@ include('../modules/core/src/core/models/renderView.php');
 
 $filename = $config['filename'];
 
-
+// $content ='';
 
 switch($request['action'])
 {
@@ -32,6 +32,7 @@ switch($request['action'])
                 insertUser($filterdata, $filename);            
             }
             header('Location: /users');
+			exit;
         }
         else
         {
@@ -52,30 +53,35 @@ switch($request['action'])
             {
                 $usuario = updateUser($filterdata['id'], $filterdata, $filename);
             }
-            header('Location: /users');            
+            header('Location: /users');
+			exit;            
         }
         else 
         {
             $usuario = getUser($request['params']['id'], $filename);
-            ob_start();
-                include('../modules/application/src/application/views/usuarios/update.phtml');
-                $content = ob_get_contents();
-            ob_end_clean();
+            $content = renderView($request, $config, array('usuario'=>$usuario));
         }
     break;
     
     case 'delete':
-        if(isset($_POST['id']))
+//        if(isset($_POST['id']))
+        if($_POST)
         {
-            deleteUser($_POST['id'], $filename);
+            if($_POST['submit']== "Borrame!"){
+//	            deleteUser($request['params']['id'], $filename);
+	            deleteUser($_POST['id'], $filename);
+			}
             header('Location: /users');
+			exit;
         }
         else
         {
-            ob_start();
-                include('../modules/application/src/application/views/usuarios/delete.phtml');
-                $content = ob_get_contents();
-            ob_end_clean();
+            $usuario = getUser($request['params']['id'], $filename);
+            $content = renderView($request, $config, array('usuario'=>$usuario));
+            // ob_start();
+                // include('../modules/application/src/application/views/usuarios/delete.phtml');
+                // $content = ob_get_contents();
+            // ob_end_clean();
         }
             
     break;
@@ -88,7 +94,7 @@ switch($request['action'])
 }
 
 
-include('../modules/application/src/application/layouts/dashboard.phtml');
+include('../modules/application/src/application/layouts/jumbotron.phtml');
 
 
 

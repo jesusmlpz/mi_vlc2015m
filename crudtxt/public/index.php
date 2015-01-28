@@ -7,8 +7,6 @@ $config = getConfig();
 $request = parseURL();
 // $request = routeURL($request);
 
-
-
 switch($request['controller'])
 {
     case 'users':
